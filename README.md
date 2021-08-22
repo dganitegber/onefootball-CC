@@ -20,5 +20,9 @@ npm run build
 npm run lint
 ```
 
+### Suggested test cases
+
+1. search Fabio/fabio. Card should be generated
+2. search Francesc
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
