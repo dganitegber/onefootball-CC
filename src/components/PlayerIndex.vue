@@ -49,12 +49,6 @@
         inkscape:window-maximized="1"
         inkscape:current-layer="Layer_1"
       />
-      <!-- <g id="g4">
-                <path
-                    d="M300.7,56L162.5,451.3h99.7L400.4,56H300.7z M481,374.3c0,45.1-36.1,81.7-80.7,81.7c-44.6,0-80.7-36.5-80.7-81.7   c0-45.1,36.1-81.7,80.7-81.7C444.7,292.6,481,329.1,481,374.3z M188.2,56c-13.3,48.4-63.2,90.4-126.3,81L31,225.2   c149.9,18.5,217.1-56,254.3-169.2H188.2L188.2,56z"
-                    id="path2"
-                /> -->
-      <!-- </g> -->
       <g id="g24">
         <path
           style="fill: black; stroke: #000000; stroke-width: 0.616867"
@@ -73,13 +67,23 @@
         />
       </g>
     </svg>
-
-    <v-text-field
-      max-width="30%"
-      label="Start here"
-      v-model="searchBar"
-      @keydown.enter="searhcPlayer()"
-    ></v-text-field>
+    <v-input class="mt-8">
+      <v-text-field
+        max-width="30%"
+        label="Start here"
+        v-model="searchBar"
+        @keydown.enter="searchPlayer()"
+      ></v-text-field>
+      <v-btn depressed plain color="transparent" @click="searchPlayer()">
+        <img
+          class="football"
+          src="@/assets/football_PNG28463.png"
+          alt="fb"
+          height="100px"
+          width="100px"
+        />
+      </v-btn>
+    </v-input>
     <v-snackbar v-model="snackbar">
       {{ text }}
 
@@ -108,6 +112,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+
 import axios from "axios";
 export interface FoundPlayer {
   active: boolean;
@@ -163,51 +168,36 @@ export default class PlayerIndex extends Vue {
   public foundPlayerExtendedProfile: FoundPlayer | undefined;
   public searchBar = "";
   public generateCard = false;
-  public isPlayerActive = true;
+  public isPlayerActive = false;
   public snackbar = false;
   public text = "";
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 
-  public async searhcPlayer() {
-    console.log("search", this.searchBar);
+  public async searchPlayer() {
+    this.generateCard = false;
     try {
       await axios
         .get(
           "https://web-sandbox.onefootball.com/assignments/player/data/" +
-            this.searchBar +
+            this.searchBar.toLowerCase() +
             ".json"
         )
         .then((res) => {
-          console.log("res.status", res.status);
-          this.foundPlayer = res.data;
-
-          console.log(
-            "(this.foundPlayer as any).active",
-            (this.foundPlayer as any).active
-          );
-          this.extendedSearch();
+          if (res.status === 403) {
+            this.foundPlayer = undefined;
+            this.snackbar = true;
+            this.text = "Sorry! player not found";
+          } else {
+            this.foundPlayer = res.data;
+            this.extendedSearch();
+          }
         });
     } catch (error) {
+      this.foundPlayer = undefined;
       console.log(error);
       this.text = "Sorry! player not found";
       this.snackbar = true;
     }
-    //     console.log("this.foundPlayer", this.foundPlayer);
-    //     if ((this.foundPlayer as any).active === true) {
-    //         console.log(
-    //             "this.foundPlayer active",
-    //             (this.foundPlayer as any).active
-    //         );
-    //     } else {
-    //         console.log(
-    //             "(this.foundPlayer as any).active",
-    //             (this.foundPlayer as any).active
-    //         );
-    //         console.log("im here");
-    //         console.log("player inactive");
-    //         this.snackbar = true;
-    //     }
-    //     if (this.foundPlayer as any["profile-id"]) {
   }
 
   public async extendedSearch() {
@@ -226,7 +216,9 @@ export default class PlayerIndex extends Vue {
           .then((res) => {
             console.log(res.data);
             this.foundPlayerExtendedProfile = res.data;
-            console.log((this.foundPlayerExtendedProfile as any).profile);
+            // console.log(
+            //     (this.foundPlayerExtendedProfile as any).profile
+            // );
             this.generateCard = true;
           });
       } catch (error) {
@@ -238,6 +230,24 @@ export default class PlayerIndex extends Vue {
 </script>
 
 <style scopes>
+.football {
+  margin-left: 20%;
+  animation: spinVertical 5s linear infinite;
+}
+
+@keyframes spinVertical {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+img:before {
+  content: none;
+}
 .container {
   width: 50% !important;
 }
