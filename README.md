@@ -20,14 +20,14 @@ npm run build
 npm run lint
 ```
 ### General description:
-The main App compone is the parent to the index. The index contains to HTTP request, one which is called upon search
+The main App component is the parent to the index. The index contains to HTTP request, one which is called upon search
 and another which only gets called when certain conditions apply. 
-Atemplate then generates certain UI elements according to criteria which eventually determin but the API responces. 
+A template then generates certain UI elements according to criteria which is eventually determined buy the API responces. 
 Upon loading the app an SVG logo will animate. Ideally this item would be it's own component,
 however due to this being my first time handling svg animation, my efforts in creating a seperate component did not succeed.
 I'm am happy with the final results tho.
 
-When the search ends with certain criteria being filled, a card with the player details will generat. Said card will disappear when
+When the search ends with certain criteria being filled, a card with the player details will be generated. This card will disappear when
 user triggers a new search.
 
 ### Suggested test cases
