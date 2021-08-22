@@ -92,7 +92,7 @@
             height="28px"
             width="28px"
           />
-          <p class="onHover">(AL!)</p>
+          <p class="onHover">ALLL!</p>
         </v-btn>
       </v-input>
       <v-snackbar v-model="snackbar">
