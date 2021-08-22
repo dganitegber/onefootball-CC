@@ -75,14 +75,17 @@
           v-model="searchBar"
           @keydown.enter="searchPlayer()"
         ></v-text-field>
-        <v-btn depressed plain color="transparent" @click="searchPlayer()">
+
+        <v-btn depressed plain color="lightgray" @click="searchPlayer()">
+          <p>G</p>
           <img
             class="football"
             src="@/assets/football_PNG28463.png"
             alt="spinning-football"
-            height="100px"
-            width="100px"
+            height="28px"
+            width="28px"
           />
+          <p>(AL!)</p>
         </v-btn>
       </v-input>
       <v-snackbar v-model="snackbar">
@@ -113,10 +116,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 export interface FoundPlayer {
-  active: boolean | undefined;
+  active: string;
   id: string;
   ["profile-id"]: string;
 }
@@ -169,12 +172,10 @@ export default class PlayerIndex extends Vue {
   public foundPlayerExtendedProfile: FoundPlayerExtendedProfile | undefined;
   public searchBar = "";
   public showCard = false;
-  public isPlayerActive = false;
   public snackbar = false;
   public text = "";
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 
-  public async searchPlayer() {
+  public async searchPlayer(): Promise<void> {
     this.showCard = false;
     try {
       await axios
@@ -183,9 +184,9 @@ export default class PlayerIndex extends Vue {
             this.searchBar.toLowerCase() +
             ".json"
         )
-        .then((res) => {
+        .then((res: AxiosResponse<FoundPlayer>) => {
           this.foundPlayer = res.data;
-          this.extendedSearch();
+          this.extendedSearch(this.foundPlayer);
         });
     } catch (error) {
       console.log(error);
@@ -194,8 +195,8 @@ export default class PlayerIndex extends Vue {
     }
   }
 
-  public async extendedSearch() {
-    if (this.foundPlayer?.active === false) {
+  private async extendedSearch(foundPlayer: FoundPlayer): Promise<void> {
+    if (foundPlayer.active === "false") {
       //todo ask about types
       this.text = "Player is inactive. Sorry!";
       this.snackbar = true;
@@ -204,9 +205,9 @@ export default class PlayerIndex extends Vue {
         await axios
           .get(
             "https://web-sandbox.onefootball.com/assignments/player/profile/" +
-              (this.foundPlayer as any)["profile-id"]
+              foundPlayer["profile-id"]
           )
-          .then((res) => {
+          .then((res: AxiosResponse<FoundPlayerExtendedProfile>) => {
             this.foundPlayerExtendedProfile = res.data;
             this.showCard = true;
           });
@@ -219,10 +220,18 @@ export default class PlayerIndex extends Vue {
 </script>
 
 <style scopes>
-.football {
-  margin-left: 20%;
+.v-btn__content {
+  color: black !important;
+  font-size: 28px;
+  opacity: 0%;
+}
+.v-btn__content:hover {
+  opacity: 100%;
+}
+.football:hover {
   animation: spinVertical 5s linear infinite;
 }
+
 @keyframes spinVertical {
   0% {
     transform: rotate(0deg);
@@ -231,8 +240,9 @@ export default class PlayerIndex extends Vue {
     transform: rotate(360deg);
   }
 }
-img:before {
-  content: none;
+img {
+  margin-left: 0px;
+  margin-bottom: 10px;
 }
 .v-card {
   display: block;
