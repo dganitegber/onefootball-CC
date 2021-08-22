@@ -76,7 +76,14 @@
           @keydown.enter="searchPlayer()"
         ></v-text-field>
 
-        <v-btn depressed plain color="lightgray" @click="searchPlayer()">
+        <v-btn
+          depressed
+          font-color="black"
+          style="font-size: 28px"
+          plain
+          color="lightgray"
+          @click="searchPlayer()"
+        >
           <p>G</p>
           <img
             class="football"
@@ -85,7 +92,7 @@
             height="28px"
             width="28px"
           />
-          <p>(AL!)</p>
+          <p class="onHover">(AL!)</p>
         </v-btn>
       </v-input>
       <v-snackbar v-model="snackbar">
@@ -220,15 +227,23 @@ export default class PlayerIndex extends Vue {
 </script>
 
 <style scopes>
-.v-btn__content {
-  color: black !important;
-  font-size: 28px;
-  opacity: 0%;
+/* .v-btn__content {
+    color: black !important;
+    font-size: 28px;
+    opacity: 100% !important;
+} */
+
+.onHover {
+  opacity: 0;
 }
-.v-btn__content:hover {
+
+.v-btn:hover .onHover {
   opacity: 100%;
 }
-.football:hover {
+/* .v-btn__content:hover {
+    opacity: 100%;
+} */
+.v-btn:hover .football {
   animation: spinVertical 5s linear infinite;
 }
 
