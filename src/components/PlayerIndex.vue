@@ -95,17 +95,17 @@
         </template>
       </v-snackbar>
 
-      <v-card elevation="5" max-width="fit-content" v-if="showCard">
-        <div>
-          <img height="280" :src="foundPlayerExtendedProfile.profile.picture" />
-          <v-col class="flex-column">
+      <v-card elevation="5" v-if="showCard" width="300px">
+        <v-col class="flex-column pa-0">
+          <img :src="foundPlayerExtendedProfile.profile.picture" width="100%" />
+          <div class="pa-3">
             <p>Name: {{ foundPlayerExtendedProfile.id }}</p>
             <p>Active: {{ foundPlayer.active }}</p>
             <p>Age: {{ foundPlayerExtendedProfile.profile.age }}</p>
             <p>Role: {{ foundPlayerExtendedProfile.profile.role }}</p>
             <p>Team: {{ foundPlayerExtendedProfile.profile.team }}</p>
-          </v-col>
-        </div>
+          </div>
+        </v-col>
       </v-card>
     </v-col>
   </v-row>
@@ -239,10 +239,10 @@ img:before {
   margin: auto;
 }
 svg {
-  width: 50%;
+  width: 30%;
   display: block;
   margin: auto;
-  left: 50%;
+  left: 30%;
   animation: fadeIn 2s;
 }
 #path15 {
